@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- THREAD project page. Static HTML, no build step: edit this file directly.
+     Media sizes/frame counts come from static/assets_manifest.json; run
+     scripts/check_media.py after changing any media reference. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- anonymous during double-anonymous review: remove noindex after the review period -->
+<meta name="robots" content="noindex, nofollow">
+<title>THREAD: Task-Specific Hierarchical Reasoning for Adaptive DLO Routing</title>
+<meta name="description" content="THREAD: a fine-tuned vision-language planner that selects reinforcement-learning skills suited to the DLO property and clip geometry for long-horizon DLO routing.">
+<meta property="og:title" content="THREAD: Task-Specific Hierarchical Reasoning for Adaptive DLO Routing">
+<meta property="og:description" content="Scene-aware, long-horizon DLO routing with a fine-tuned VLM planner and RL-based skills.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="static/css/bulma.min.css">
+<link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+
+<nav class="anchor-nav" aria-label="Sections">
+  <div class="container is-max-desktop">
+    <a href="#video">Video</a>
+    <a href="#abstract">Abstract</a>
+    <a href="#overview">Overview</a>
+    <a href="#skills">Skills</a>
+    <a href="#data">Data</a>
+    <a href="#closed-loop">Closed loop</a>
+    <a href="#real">Real world</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#bibtex">BibTeX</a>
+  </div>
+</nav>
+
+<main id="main-content">
+
+<section class="hero is-header">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+      <h1 class="title is-2 publication-title"><span class="method">THREAD</span>: Task&#8209;Specific Hierarchical Reasoning for Adaptive DLO Routing</h1>
+      <div class="publication-byline">
+        Anonymous Authors
+        <span class="venue">Submission to the IEEE International Conference on Robotics and Automation (ICRA) 2027. Author information is omitted for double&#8209;anonymous review.</span>
+      </div>
+      <div class="publication-links">
+        <a class="button" href="#video"><span class="icon"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg></span><span>Video</span></a>
+        <span class="button is-pending" title="Available after the review period">Paper (after review)</span>
+        <span class="button is-pending" title="Available after the review period">Code (coming soon)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- (a) video attachment -->
+<section class="section" id="video">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Video</h2>
+    <!-- REPLACE: put the ICRA 2027 video attachment here (e.g. static/videos/attachment.mp4) and update
+         src, poster, width and height below. The clip shown now is only a placeholder. -->
+    <div class="card">
+      <video width="1280" height="720" controls preload="metadata" playsinline poster="static/videos/real_wire_poster.jpg"><source src="static/videos/real_wire.mp4" type="video/mp4"></video>
+      <div class="card-body"><div class="card-note"><span class="tag-ph">Placeholder</span>The ICRA 2027 video attachment will appear here. The clip currently shown is one of the real-robot trials from the section below.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section is-alt" id="abstract">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Abstract</h2>
+    <div class="columns is-desktop abstract-columns">
+      <div class="column is-7-desktop">
+        <div class="content has-text-justified">
+          <p>Long-horizon manipulation of deformable linear objects (DLOs) requires selecting skills that accommodate object properties, scene geometric constraints, and changing deformation states. One approach is to leverage the perception and reasoning power of vision-language models (VLMs). However, general-purpose VLMs can overlook subtle task-relevant details that determine whether a manipulation skill is appropriate, leading to repeated failures and delayed recovery. We propose THREAD, a hierarchical framework for long-horizon DLO routing that combines a task-specific fine-tuned VLM planner with reinforcement learning (RL)-based manipulation skills. The planner interprets visual observations to select skills suited to the DLO properties and clip geometry while assessing whether the current configuration requires recovery. To acquire this task-specific knowledge, we generate simulation rollouts using an oracle planner. We further relabel recovery decisions using geometric criteria for insertion feasibility, teaching the planner to distinguish configurations that lead to successful insertion from those requiring corrective actions. In closed-loop simulation, THREAD improves routing success over the in-context GPT baseline by 15&ndash;32% when DLO properties or clip geometry must be inferred from visual observations. Experiments on a Unitree G1 further validate long-horizon routing with flexible nylon rope and stiff wire.</p>
+        </div>
+      </div>
+      <div class="column is-5-desktop fig-col">
+        <figure class="paper-figure"><div class="fig-pad"><img src="static/figures/fig1_overview.webp" width="1200" height="1390" alt="THREAD overview: skill library, scene-aware skill selection and real-robot routing" loading="lazy" decoding="async"></div><figcaption><b>Scene-aware, long-horizon DLO routing.</b> From a skill library of RL-based insertion variants together with Pull and a Flatten recovery skill (top), THREAD's fine-tuned VLM planner interprets the DLO properties and clip geometry to choose the skill best suited to each scene (middle), enabling a real robot to route flexible nylon and stiff wires through a sequence of clips (bottom).</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- (b) pipeline -->
+<section class="section" id="overview">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Overview</h2>
+    <p class="section-lead">THREAD separates <i>which</i> skill to run from <i>how</i> to run it. A skill library of RL-trained insertion policies and motion primitives executes the manipulation. A Qwen3-VL-8B planner, fine-tuned on relabeled simulation rollouts, looks at a global view, a zoomed-in view of the target clip and key frames of the previous skill, and decides the next skill, the target clip, and whether the route is complete.</p>
+  </div>
+  <div class="media-band">
+    <figure class="paper-figure"><div class="scroll-x"><img src="static/figures/fig2_pipeline.webp" width="2800" height="1407" alt="THREAD pipeline" loading="lazy" decoding="async"></div><figcaption><b>Hierarchical framework for long-horizon DLO routing.</b> RL-trained insertion policies and motion primitives form a skill library handling different DLO properties and clip geometries. Simulation rollouts provide training data for fine-tuning the high-level VLM planner. Given visual observations, task instructions, and skill descriptions, the planner recognizes task-relevant scene details and selects appropriate manipulation and recovery skills.</figcaption></figure>
+  </div>
+</section>
+
+<!-- (c) skill library -->
+<section class="section is-alt" id="skills">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Skill library</h2>
+    <p class="section-lead">Insertion is where the DLO property and the clip geometry matter, so it comes in variants. RL policies specialised to a flexible or a stiff DLO slide the head along the ground into an open clip, and a lift policy raises it over the base of a bottomed clip. Pull carries the DLO on to the next clip, and Flatten straightens it when further insertions are unlikely to succeed.</p>
+    <div class="media-narrow">
+      <figure class="paper-figure"><div class=""><img src="static/figures/fig3_dlos_clips.webp" width="1600" height="1155" alt="DLOs and clips in simulation and in the real world" loading="lazy" decoding="async"></div><figcaption><b>DLOs and clips in simulation and the real world.</b> Top left: stiff and flexible DLOs used in simulation tasks T1 and T2. Top right: nylon rope and fabric-wrapped iron wire in the real world. Bottom: open clip (left) and bottomed clip (right) in T3.</figcaption></figure>
+    </div>
+
+    <h3 class="title is-4 sub">What each skill looks like</h3>
+  </div>
+  <div class="media-band">
+    <div class="media-grid six">
+      <div class="card"><video width="512" height="512" data-fps="10" data-frames="112" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/skill_insert_flexible_poster.jpg"><source src="static/videos/skill_insert_flexible.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Insert-flexible</div><div class="card-note">Policy trained on the flexible DLO, sliding it into an open clip.</div></div></div>
+      <div class="card"><video width="512" height="512" data-fps="10" data-frames="200" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/skill_insert_stiff_poster.jpg"><source src="static/videos/skill_insert_stiff.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Insert-stiff / Insert-slide</div><div class="card-note">Policy trained on the stiff DLO, sliding it into an open clip. The same policy serves as Insert-slide when the clip geometry varies.</div></div></div>
+      <div class="card"><video width="512" height="512" data-fps="10" data-frames="221" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/skill_insert_lift_poster.jpg"><source src="static/videos/skill_insert_lift.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Insert-lift</div><div class="card-note">Raises the head over the base of a bottomed clip and angles it into the elevated opening.</div></div></div>
+    </div>
+    <div class="media-grid six">
+      <div class="card start-2"><video width="640" height="470" data-fps="30" data-frames="80" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/skill_pull_poster.jpg"><source src="static/videos/skill_pull.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Pull</div><div class="card-note">Carries the DLO head from the routed red clip on to the green one. Cut from the THREAD episode below; the box reads <i>skill = pull</i> (decision 3 of 22).</div></div></div>
+      <div class="card"><video width="640" height="470" data-fps="30" data-frames="140" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/skill_flatten_poster.jpg"><source src="static/videos/skill_flatten.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Flatten</div><div class="card-note">Recovery skill: grasps the DLO near its head and drags it back so the front segment lies straight in front of the green clip. Cut from the same episode (decision 7 of 22).</div></div></div>
+    </div>
+  </div>
+  <div class="container is-max-desktop">
+    <h3 class="title is-4 sub">Applying the wrong skill</h3>
+    <p class="section-lead">Each insertion policy is specialised. Executed on the wrong DLO or at the wrong clip it can fail outright (Insert-stiff on the flexible DLO succeeds in 0 of 100 episodes) or succeed less often and insert less deeply (Insert-slide on a bottomed clip: 58%), which is why the planner has to recognise the DLO property and the clip geometry before it chooses.</p>
+  </div>
+  <div class="media-band">
+    <div class="media-grid six">
+      <div class="card start-2"><video width="512" height="512" data-fps="10" data-frames="160" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/wrong_stiff_on_flexible_poster.jpg"><source src="static/videos/wrong_stiff_on_flexible.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title"><span class="tag-bad">wrong skill</span>Insert-stiff on a flexible DLO</div><div class="card-note">The soft DLO buckles into loops beside the clip instead of entering the channel.</div></div></div>
+      <div class="card"><video width="512" height="512" data-fps="10" data-frames="254" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/wrong_slide_on_bottomed_poster.jpg"><source src="static/videos/wrong_slide_on_bottomed.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title"><span class="tag-bad">wrong skill</span>Insert-slide on a bottomed clip</div><div class="card-note">Pushed at ground height, the head runs into the raised base and never enters the channel.</div></div></div>
+    </div>
+  </div>
+  <div class="container is-max-desktop">
+    <p class="table-caption" id="tab-transfer">Single-clip insertion when the policy matches or mismatches the scene (100 episodes per row)</p>
+    <div class="table-wrap">
+      <table class="paper-table" aria-labelledby="tab-transfer">
+        <thead><tr><th>Scene</th><th class="txt">Policy</th><th>Success (%) &uarr;</th><th>Insertion length (cm) &uarr;</th><th>Steps &darr;</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="5"><span class="g">DLO property (open clip)</span></td></tr>
+          <tr class="ours"><td>Flexible DLO</td><td class="txt">Insert-flexible</td><td class="best">91</td><td class="best">3.65</td><td class="best">2.99</td></tr>
+          <tr><td>Flexible DLO</td><td class="txt">Insert-stiff</td><td class="hl">0</td><td>&minus;4.84</td><td>5.50</td></tr>
+          <tr><td>Stiff DLO</td><td class="txt">Insert-flexible</td><td>85</td><td>3.05</td><td>3.02</td></tr>
+          <tr class="ours"><td>Stiff DLO</td><td class="txt">Insert-stiff</td><td class="best">100</td><td class="best">9.24</td><td class="best">2.82</td></tr>
+          <tr class="group midrule"><td colspan="5"><span class="g">Clip geometry (stiff DLO)</span></td></tr>
+          <tr class="ours"><td>Open clip (0 cm base)</td><td class="txt">Insert-slide</td><td class="best">98</td><td class="best">8.87</td><td class="best">2.89</td></tr>
+          <tr><td>Open clip (0 cm base)</td><td class="txt">Insert-lift</td><td>85</td><td>6.07</td><td>4.64</td></tr>
+          <tr><td>Bottomed clip (1 cm base)</td><td class="txt">Insert-slide</td><td class="hl">58</td><td>2.30</td><td>3.31</td></tr>
+          <tr class="ours"><td>Bottomed clip (1 cm base)</td><td class="txt">Insert-lift</td><td class="best">97</td><td class="best">6.31</td><td class="best">2.97</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Shaded rows use the policy that matches the scene. Insertion length is how far the DLO head passes the clip opening; steps are policy steps per episode. Table II of the paper.</p>
+  </div>
+</section>
+
+<!-- (d) data collection and relabeling -->
+<section class="section" id="data">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Data collection and relabeling</h2>
+    <p class="section-lead">Planner training data comes from simulation rollouts of an oracle planner with privileged access to the DLO state, the clip geometry and the routing status. To show the planner what a wrong skill looks like in the tasks where the property is hidden, the oracle deliberately executes the mismatched insertion variant on its first attempt at a clip; those steps are removed from the labels, while the decisions that follow keep their correct labels.</p>
+    <p class="section-lead">The oracle flattens only after a fixed number of failed attempts, whatever the DLO shape. THREAD discards those decisions and relabels flattening from the DLO shape instead: a failed insertion that starts outside a success envelope becomes Flatten, and one that starts inside it is ambiguous and dropped. The envelope is set to keep 99% of the successful insertions, i.e. the insertion that routes a clip together with the at most two attempts right before it.</p>
+  </div>
+  <div class="media-band">
+    <figure class="paper-figure"><div class="scroll-x"><img src="static/figures/fig4_relabel.webp" width="2800" height="753" alt="Relabeling flattening from the DLO shape" loading="lazy" decoding="async"></div><figcaption><b>Relabeling flattening from the DLO shape.</b> Top: the skills the oracle executed in one episode. Bottom: the labels used for training. A failed insertion whose DLO shape falls outside the success envelope is relabeled Flatten, and successful insertions keep their label. Attempts on a self-entangled DLO, and attempts made with the wrong insertion variant, are dropped from the training set.</figcaption></figure>
+  </div>
+</section>
+
+<!-- (e) closed-loop rollouts -->
+<section class="section is-alt" id="closed-loop">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Closed-loop rollouts</h2>
+    <p class="section-lead">Complete routing episodes in simulation with the same skill library and the same prompt. THREAD is the fine-tuned Qwen3-VL-8B planner; the baseline is GPT-5.6-terra queried zero-shot, one decision at a time. The box in the lower-left corner of each video shows every planner decision: whether the route is done, the target clip and the chosen skill (use the &#10530; button under a video to watch it full screen). In the overlays, <i>insert_mid</i> is Insert-flexible and <i>mid</i> is the flexible DLO. The top banner names the scene and episode (<i>sNN epN</i>), the environment (<i>CLOSE</i> marks the clip-geometry setting), the number of routed clips (<i>routed=</i>) and the termination code (<i>fail=</i>; 0: the planner declared completion, 4: the arm could not reach a commanded pose).</p>
+
+    <h3 class="title is-4 sub">Hidden DLO property</h3>
+    <p class="section-lead has-text-centered">Flexible DLO, open clips. Same scene and same initial state for both planners.</p>
+    <div class="media-grid">
+      <div class="card"><video width="640" height="470" data-fps="30" data-frames="1170" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/cl_rope_ours_poster.jpg"><source src="static/videos/cl_rope_ours.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title"><span class="tag-ours">THREAD</span>Routes all three clips</div><div class="card-note">The planner declares the task complete after 22 decisions.</div></div></div>
+      <div class="card"><video width="640" height="470" data-fps="30" data-frames="710" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/cl_rope_gpt_poster.jpg"><source src="static/videos/cl_rope_gpt.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title"><span class="tag-base">GPT-5.6-terra, zero-shot</span>Routes one clip</div><div class="card-note">The episode ends after 7 decisions, when the arm cannot reach a commanded pose.</div></div></div>
+    </div>
+
+    <h3 class="title is-4 sub">Hidden clip geometry</h3>
+    <p class="section-lead has-text-centered">Stiff DLO, a mix of open and bottomed clips. The two episodes come from different scenes; THREAD routes 74.7% of the episodes in this setting.</p>
+    <div class="media-grid">
+      <div class="card"><video width="640" height="470" data-fps="30" data-frames="975" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/cl_clip_ours_poster.jpg"><source src="static/videos/cl_clip_ours.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title"><span class="tag-ours">THREAD</span>Completes the route</div><div class="card-note">The episode routes all three clips and the planner declares completion on decision 22. The video ends as decision 21 begins, before a rendering glitch in the episode's last second.</div></div></div>
+      <div class="card"><video width="640" height="470" data-fps="30" data-frames="1145" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/cl_clip_gpt_poster.jpg"><source src="static/videos/cl_clip_gpt.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title"><span class="tag-base">GPT-5.6-terra, zero-shot</span>Routes two clips</div><div class="card-note">No completion after 19 decisions; the episode ends when the arm cannot reach a commanded pose.</div></div></div>
+    </div>
+
+    <h3 class="title is-4 sub">Recovering earlier</h3>
+    <div class="media-narrow">
+      <figure class="paper-figure"><div class=""><img src="static/figures/fig5_early_flatten.webp" width="1800" height="1071" alt="THREAD flattens the DLO earlier than the zero-shot GPT planner" loading="lazy" decoding="async"></div><figcaption><b>How THREAD flattens the DLO earlier.</b> Both VLM planners received key-frame images and current scene images. Planners react differently when the DLO curves away from the opening of the green bottomed clip: the zero-shot GPT planner retries Insert-lift twice before a late flattening (top), while THREAD flattens first and then seats the clip in a few insertions (bottom).</figcaption></figure>
+    </div>
+
+    <details class="extra">
+      <summary>Closed-loop routing results <span class="sum-note">(Table IV of the paper)</span></summary>
+      <div class="table-wrap">
+        <table class="paper-table">
+          <thead>
+            <tr class="span"><th></th><th colspan="3">Given DLO property</th><th colspan="3">Hidden DLO property</th><th colspan="3">Hidden clip geometry</th></tr>
+            <tr><th>Planner</th><th>SR &uarr;</th><th>Clips &uarr;</th><th>FI* &darr;</th><th>SR &uarr;</th><th>Clips &uarr;</th><th>FI* &darr;</th><th>SR &uarr;</th><th>Clips &uarr;</th><th>FI* &darr;</th></tr>
+          </thead>
+          <tbody>
+            <tr class="ours"><td>THREAD (Qwen3-VL-8B LoRA)</td><td class="best">63.6</td><td class="best">81.8</td><td class="best">1.53</td><td class="best">59.1</td><td class="best">80.8</td><td>1.72</td><td class="best">74.7</td><td class="best">89.3</td><td>2.39</td></tr>
+            <tr><td>THREAD w/o failure data</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>56.1</td><td>79.3</td><td class="best">1.26</td><td>72.0</td><td>84.4</td><td class="best">2.03</td></tr>
+            <tr><td>GPT-5.6-terra (multi-turn)</td><td>60.6</td><td>74.7</td><td>1.80</td><td>43.9</td><td>59.1</td><td>1.73</td><td>42.7</td><td>68.0</td><td>2.70</td></tr>
+            <tr><td>GPT-5.6-terra (zero-shot)</td><td>30.8</td><td>62.1</td><td>3.99</td><td>21.2</td><td>48.0</td><td>4.17</td><td>29.3</td><td>60.0</td><td>5.70</td></tr>
+            <tr class="midrule"><td>Symbolic band planner (no VLM)</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>50.0</td><td>72.2</td><td>1.13</td><td>60.0</td><td>76.4</td><td>1.81</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Values as reported in Table IV of the paper. SR: routing success rate (%). Clips: routed clip slots (%). FI*: failed insertions per routed clip. SR and Clips use 66 episodes per planner in the two DLO settings (65 for zero-shot GPT when the DLO is given) and 75 in the clip-geometry setting. Bold marks the best learned planner; the privileged symbolic planner, which reads the simulator state, is excluded.</p>
+    </details>
+  </div>
+</section>
+
+<!-- (f) real-world experiments -->
+<section class="section" id="real">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Real-world experiments</h2>
+    <p class="section-lead">Seven routing trials on a Unitree G1 with a flexible nylon rope and a fabric-wrapped stiff iron wire; five of them route all three clips. The third video is a demo routing an LED strip.</p>
+  </div>
+  <div class="media-band">
+    <div class="media-grid cols-3">
+      <div class="card"><video width="1280" height="720" data-fps="29.97" data-frames="986" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/real_nylon_poster.jpg"><source src="static/videos/real_nylon.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Flexible nylon rope</div><div class="card-note">Routed through all three clips.</div></div></div>
+      <div class="card"><video width="1280" height="720" data-fps="29.97" data-frames="1156" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/real_wire_poster.jpg"><source src="static/videos/real_wire.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Fabric-wrapped iron wire</div><div class="card-note">Routed through all three clips.</div></div></div>
+      <div class="card"><video width="1280" height="720" data-fps="29.97" data-frames="915" data-autoplay muted loop playsinline preload="metadata" poster="static/videos/real_led_demo_poster.jpg"><source src="static/videos/real_led_demo.mp4" type="video/mp4"></video><div class="scrub" aria-hidden="true"></div><div class="card-body"><div class="card-title">Demo: routing an LED strip</div><div class="card-note">A routing demo with an LED strip in place of the rope.</div></div></div>
+    </div>
+  </div>
+  <div class="container is-max-desktop">
+    <h3 class="title is-4 sub">Setup</h3>
+    <p class="section-lead">The G1 runs with its waist locked and its Dex3-1 hands fitted with custom toothed fingertips for pinch grasps. A top-down camera serves the planner: the background is inpainted and the target clip is detected, giving a global view and a zoomed-in crop. A head-mounted camera with SAM3 segmentation provides the DLO particles and clip poses that the insertion policy acts on.</p>
+  </div>
+  <div class="media-band">
+    <figure class="paper-figure"><div class="scroll-x"><img src="static/figures/fig6_real_perception.webp" width="2800" height="1210" alt="Perception pipeline for real-robot deployment" loading="lazy" decoding="async"></div><figcaption><b>Perception pipeline for real-robot deployment.</b> Right: top-down images with background inpainting and target-clip detection provide the VLM planner a global scene view and a zoomed-in crop of the target clip. Left: SAM3 segmentation of head-mounted camera images supports extraction of DLO particles and clip poses in the robot frame. The selected low-level policy uses the DLO state to generate a parameterized motion primitive for execution.</figcaption></figure>
+  </div>
+  <div class="container is-max-desktop">
+    <h3 class="title is-4 sub">Hardware and camera views</h3>
+    <div class="media-grid">
+      <div class="card"><img src="static/images/setup_overview.webp" width="1600" height="1115" alt="Overhead view of the real setup" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Setup</div><div class="card-note">Top-down planner camera on a boom above the clip board, with the G1 in front of it.</div></div></div>
+      <div class="card"><img src="static/images/setup_hands.webp" width="1600" height="1116" alt="Dex3-1 hands, clips and both DLOs" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Hands, clips and DLOs</div><div class="card-note">Dex3-1 hands with the custom fingertips, the three clips, the braided nylon rope and the fabric-wrapped wire.</div></div></div>
+    </div>
+    <div class="media-grid">
+      <div class="card"><img src="static/images/cam_world_raw.webp" width="1600" height="900" alt="Raw top-down camera image" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Top-down camera, raw</div><div class="card-note">The planner camera before inpainting.</div></div></div>
+      <div class="card"><img src="static/images/cam_head.webp" width="1600" height="900" alt="Head camera image" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Head camera</div><div class="card-note">Input to SAM3 segmentation, from which the DLO particles and clip poses are extracted.</div></div></div>
+    </div>
+    <div class="media-grid">
+      <div class="card"><img src="static/images/planner_global.webp" width="1024" height="720" alt="Planner input: inpainted global view" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Planner input: global view</div><div class="card-note">Inpainted top-down view of the board and all three clips.</div></div></div>
+      <div class="card"><img src="static/images/planner_clip.webp" width="1024" height="720" alt="Planner input: zoomed-in view of the target clip" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Planner input: zoomed-in view</div><div class="card-note">Crop around the detected target clip.</div></div></div>
+    </div>
+    <div class="media-grid" style="grid-template-columns:minmax(0,1fr)">
+      <div class="card"><img src="static/images/fingertip.webp" width="1600" height="540" alt="Custom fingertip design" loading="lazy" decoding="async"><div class="card-body"><div class="card-title">Custom fingertips</div><div class="card-note">Toothed fingertips that enlarge the contact surface and reduce slip in pinch grasps, shown as CAD models and mounted on the Dex3-1 hand.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- (g) gallery -->
+<section class="section is-alt" id="gallery">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Gallery</h2>
+    <p class="section-lead has-text-centered">Supporting material beyond the figures and tables of the paper.</p>
+
+    <details class="extra" open>
+      <summary>Reachability of the G1 arm <span class="sum-note">(waist locked vs. unlocked)</span></summary>
+      <div class="media-grid">
+        <div class="card"><div class="fixed-box"><img src="static/images/reach_waist_locked.webp" width="900" height="775" alt="Reachability map with the waist locked" loading="lazy" decoding="async"></div><div class="card-body"><div class="card-title">Waist locked</div><div class="card-note">Only a narrow band close to the robot is reachable, and reach drops to zero beyond about x = 0.5 m.</div></div></div>
+        <div class="card"><div class="fixed-box"><img src="static/images/reach_waist_unlocked.webp" width="506" height="478" alt="Reachability map with the waist unlocked" loading="lazy" decoding="async"></div><div class="card-body"><div class="card-title">Waist unlocked</div><div class="card-note">The reachable region widens to roughly x = 0.2&ndash;0.47 m across y = &minus;0.1 to 0.35 m.</div></div></div>
+      </div>
+      <p class="table-note">Fraction of five hand yaws reachable at table height (z = 0.76 m) over the workspace in front of the robot (base at the origin). The two maps were computed with different grids and axis ranges. The real-robot experiments run with the waist locked.</p>
+    </details>
+
+    <details class="extra">
+      <summary>Why the multi-turn GPT baseline fails <span class="sum-note">(failure causes per task)</span></summary>
+      <div class="table-wrap">
+        <table class="paper-table">
+          <thead><tr><th>Task</th><th>Episodes</th><th>Success</th><th>Failed</th><th>Unreachable pose</th><th>Decision budget used up</th><th>Planner stopped early</th></tr></thead>
+          <tbody>
+            <tr><td>Given DLO property</td><td>66</td><td>40 (60.6%)</td><td>26</td><td class="hl">17 (65.4%)</td><td>7 (26.9%)</td><td>2 (7.7%)</td></tr>
+            <tr><td>Hidden DLO property</td><td>66</td><td>29 (43.9%)</td><td>37</td><td class="hl">26 (70.3%)</td><td>6 (16.2%)</td><td>5 (13.5%)</td></tr>
+            <tr><td>Hidden clip geometry</td><td>75</td><td>32 (42.7%)</td><td>43</td><td>5 (11.6%)</td><td>12 (27.9%)</td><td class="hl">26 (60.5%)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Successes are counted as in Table IV; percentages of the failure causes are shares of the failed episodes, and the most frequent cause in each task is highlighted. <b>Unreachable pose</b>: the arm could not reach a commanded waypoint and the reset recovery failed. <b>Decision budget</b>: 50 planner decisions without completing. <b>Stopped early</b>: the planner declared the task finished before all clips were routed. No episode ended in a collision, a wrong clip order or an unavailable skill. On the two open-clip tasks, most failures of this baseline are reachability failures rather than planning errors.</p>
+    </details>
+
+    <details class="extra">
+      <summary>Where zero-shot GPT goes wrong in open loop <span class="sum-note">(accuracy per output field)</span></summary>
+      <div class="table-wrap">
+        <table class="paper-table is-narrow">
+          <thead><tr><th>Task</th><th>Done flag</th><th>Target clip</th><th>Skill</th><th>All three (exact match)</th></tr></thead>
+          <tbody>
+            <tr><td>Given DLO property</td><td>100</td><td>86</td><td>79</td><td>79</td></tr>
+            <tr><td>Hidden DLO property</td><td>100</td><td>96</td><td class="hl">56</td><td>56</td></tr>
+            <tr><td>Hidden clip geometry</td><td>93</td><td>94</td><td class="hl">48</td><td>48</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">GPT-5.6-terra, zero-shot, on the 100 held-out decisions per task of Table III (%). The general-purpose model locates the target clip and judges completion well; the skill is what it gets wrong. With the clip geometry hidden, it answers none of the 25 held-out Insert-slide decisions correctly.</p>
+    </details>
+
+    <details class="extra">
+      <summary>Insertion variants chosen on the real robot <span class="sum-note">(hidden DLO property)</span></summary>
+      <div class="table-wrap">
+        <table class="paper-table">
+          <thead><tr><th>DLO in the trial</th><th>Insertion decisions</th><th>Insert-flexible</th><th>Insert-stiff</th><th>Matching variant</th></tr></thead>
+          <tbody>
+            <tr><td>Flexible nylon rope (4 trials)</td><td>35</td><td>17</td><td>18</td><td>48.6%</td></tr>
+            <tr><td>Fabric-wrapped iron wire (2 trials)</td><td>9</td><td>2</td><td>7</td><td>77.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Counted from the planner's logged decisions in four nylon-rope and two iron-wire trials, the trials behind the percentages reported in the paper. Across both DLOs the planner leans towards Insert-stiff (25 of 44 insertion decisions), so the higher agreement on the wire partly reflects that preference. As discussed in the paper, the clips are arranged in a near-straight line to stay within the robot's reach, which leaves the DLO nearly straight for much of the routing and may hide the visual cues to its flexibility.</p>
+    </details>
+
+    <details class="extra">
+      <summary>Failed insertions per routed clip, and insertions spent on clips that are never routed</summary>
+      <div class="table-wrap">
+        <table class="paper-table">
+          <thead>
+            <tr class="span"><th></th><th colspan="2">Given DLO property</th><th colspan="2">Hidden DLO property</th><th colspan="2">Hidden clip geometry</th></tr>
+            <tr><th>Planner</th><th>FI* &darr;</th><th>Unrouted share</th><th>FI* &darr;</th><th>Unrouted share</th><th>FI* &darr;</th><th>Unrouted share</th></tr>
+          </thead>
+          <tbody>
+            <tr class="ours"><td>THREAD</td><td>1.53</td><td>37%</td><td>1.72</td><td>42%</td><td>2.39</td><td>23%</td></tr>
+            <tr><td>THREAD w/o failure data</td><td>&ndash;</td><td>&ndash;</td><td>1.26</td><td>41%</td><td>2.03</td><td>36%</td></tr>
+            <tr><td>GPT-5.6-terra (multi-turn)</td><td>1.80</td><td>42%</td><td>1.73</td><td>50%</td><td>2.70</td><td>47%</td></tr>
+            <tr><td>GPT-5.6-terra (zero-shot)</td><td>3.99</td><td>25%</td><td>4.17</td><td>33%</td><td>5.70</td><td>34%</td></tr>
+            <tr><td>Symbolic band planner (no VLM)</td><td>&ndash;</td><td>&ndash;</td><td>1.13</td><td>70%</td><td>1.81</td><td>56%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note"><b>FI*</b>: on every clip an episode routes, the insertion that routes it and the at most two insertions immediately before it count as successful; every other insertion on that clip is a failed insertion. FI* divides the failed insertions by the number of routed clips. <b>Unrouted share</b>: the fraction of all insertions spent on clips the episode never routes, which FI* does not see. The symbolic planner's low FI* comes with the largest unrouted share: most of its insertions go into clips it never routes.</p>
+    </details>
+  </div>
+</section>
+
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">BibTeX</h2>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem"><button id="copy-bibtex" class="button is-small" type="button">Copy</button></div>
+<pre class="bibtex"><code id="bibtex-code">@inproceedings{thread2027,
+  title     = {THREAD: Task-Specific Hierarchical Reasoning for Adaptive DLO Routing},
+  author    = {Anonymous Authors},
+  booktitle = {Submission to the IEEE International Conference on Robotics and Automation (ICRA)},
+  year      = {2027},
+  note      = {Author information omitted for double-anonymous review}
+}</code></pre>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container is-max-desktop has-text-centered">
+    <p>Anonymous project page for double-anonymous review.</p>
+    <p>Page layout adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" rel="noopener">Academic Project Page Template</a>, itself based on the <a href="https://nerfies.github.io" rel="noopener">Nerfies</a> page, under the <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a> license.</p>
+  </div>
+</footer>
+
+<script src="static/js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+{
+ "figures/fig1_overview.webp": {
+  "width": 1200,
+  "height": 1390,
+  "bytes": 198008
+ },
+ "figures/fig2_pipeline.webp": {
+  "width": 2800,
+  "height": 1407,
+  "bytes": 309784
+ },
+ "figures/fig3_dlos_clips.webp": {
+  "width": 1600,
+  "height": 1155,
+  "bytes": 79940
+ },
+ "figures/fig4_relabel.webp": {
+  "width": 2800,
+  "height": 753,
+  "bytes": 137070
+ },
+ "figures/fig5_early_flatten.webp": {
+  "width": 1800,
+  "height": 1071,
+  "bytes": 95656
+ },
+ "figures/fig6_real_perception.webp": {
+  "width": 2800,
+  "height": 1210,
+  "bytes": 209776
+ },
+ "images/cam_head.webp": {
+  "width": 1600,
+  "height": 900,
+  "bytes": 85792
+ },
+ "images/cam_world_raw.webp": {
+  "width": 1600,
+  "height": 900,
+  "bytes": 224806
+ },
+ "images/fingertip.webp": {
+  "width": 1600,
+  "height": 540,
+  "bytes": 34822
+ },
+ "images/planner_clip.webp": {
+  "width": 1024,
+  "height": 720,
+  "bytes": 30896
+ },
+ "images/planner_global.webp": {
+  "width": 1024,
+  "height": 720,
+  "bytes": 21166
+ },
+ "images/reach_waist_locked.webp": {
+  "width": 900,
+  "height": 775,
+  "bytes": 29310
+ },
+ "images/reach_waist_unlocked.webp": {
+  "width": 506,
+  "height": 478,
+  "bytes": 17544
+ },
+ "images/setup_hands.webp": {
+  "width": 1600,
+  "height": 1116,
+  "bytes": 149918
+ },
+ "images/setup_overview.webp": {
+  "width": 1600,
+  "height": 1115,
+  "bytes": 221214
+ },
+ "videos/cl_clip_gpt.mp4": {
+  "width": 640,
+  "height": 470,
+  "fps": 30.0,
+  "frames": 1145,
+  "duration": 38.17,
+  "bytes": 2224153,
+  "poster": "static/videos/cl_clip_gpt_poster.jpg"
+ },
+ "videos/cl_clip_ours.mp4": {
+  "width": 640,
+  "height": 470,
+  "fps": 30.0,
+  "frames": 975,
+  "duration": 32.5,
+  "bytes": 1874441,
+  "poster": "static/videos/cl_clip_ours_poster.jpg"
+ },
+ "videos/cl_rope_gpt.mp4": {
+  "width": 640,
+  "height": 470,
+  "fps": 30.0,
+  "frames": 710,
+  "duration": 23.67,
+  "bytes": 1389159,
+  "poster": "static/videos/cl_rope_gpt_poster.jpg"
+ },
+ "videos/cl_rope_ours.mp4": {
+  "width": 640,
+  "height": 470,
+  "fps": 30.0,
+  "frames": 1170,
+  "duration": 39.0,
+  "bytes": 2254892,
+  "poster": "static/videos/cl_rope_ours_poster.jpg"
+ },
+ "videos/real_led_demo.mp4": {
+  "width": 1280,
+  "height": 720,
+  "fps": 29.97,
+  "frames": 915,
+  "duration": 30.53,
+  "bytes": 3673334,
+  "poster": "static/videos/real_led_demo_poster.jpg"
+ },
+ "videos/real_nylon.mp4": {
+  "width": 1280,
+  "height": 720,
+  "fps": 29.97,
+  "frames": 986,
+  "duration": 32.9,
+  "bytes": 4274108,
+  "poster": "static/videos/real_nylon_poster.jpg"
+ },
+ "videos/real_wire.mp4": {
+  "width": 1280,
+  "height": 720,
+  "fps": 29.97,
+  "frames": 1156,
+  "duration": 38.57,
+  "bytes": 3566101,
+  "poster": "static/videos/real_wire_poster.jpg"
+ },
+ "videos/skill_flatten.mp4": {
+  "width": 640,
+  "height": 470,
+  "fps": 30.0,
+  "frames": 140,
+  "duration": 4.67,
+  "bytes": 316537,
+  "poster": "static/videos/skill_flatten_poster.jpg"
+ },
+ "videos/skill_insert_flexible.mp4": {
+  "width": 512,
+  "height": 512,
+  "fps": 10.0,
+  "frames": 112,
+  "duration": 11.2,
+  "bytes": 443722,
+  "poster": "static/videos/skill_insert_flexible_poster.jpg"
+ },
+ "videos/skill_insert_lift.mp4": {
+  "width": 512,
+  "height": 512,
+  "fps": 10.0,
+  "frames": 221,
+  "duration": 22.1,
+  "bytes": 932900,
+  "poster": "static/videos/skill_insert_lift_poster.jpg"
+ },
+ "videos/skill_insert_stiff.mp4": {
+  "width": 512,
+  "height": 512,
+  "fps": 10.0,
+  "frames": 200,
+  "duration": 20.0,
+  "bytes": 821034,
+  "poster": "static/videos/skill_insert_stiff_poster.jpg"
+ },
+ "videos/skill_pull.mp4": {
+  "width": 640,
+  "height": 470,
+  "fps": 30.0,
+  "frames": 80,
+  "duration": 2.67,
+  "bytes": 192106,
+  "poster": "static/videos/skill_pull_poster.jpg"
+ },
+ "videos/wrong_slide_on_bottomed.mp4": {
+  "width": 512,
+  "height": 512,
+  "fps": 10.0,
+  "frames": 254,
+  "duration": 25.4,
+  "bytes": 1059630,
+  "poster": "static/videos/wrong_slide_on_bottomed_poster.jpg"
+ },
+ "videos/wrong_stiff_on_flexible.mp4": {
+  "width": 512,
+  "height": 512,
+  "fps": 10.0,
+  "frames": 160,
+  "duration": 16.0,
+  "bytes": 645552,
+  "poster": "static/videos/wrong_stiff_on_flexible_poster.jpg"
+ }
+}

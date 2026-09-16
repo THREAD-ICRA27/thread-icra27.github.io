@@ -1,0 +1,7 @@
+# raw source media (not published); the page serves the web encodes in static/
+medias/
+# local QA output
+qa_out/
+__pycache__/
+*.pyc
+.DS_Store
