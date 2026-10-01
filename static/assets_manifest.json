@@ -74,6 +74,15 @@
   "height": 1115,
   "bytes": 221214
  },
+ "videos/attachment.mp4": {
+  "width": 2560,
+  "height": 1440,
+  "fps": 29.97,
+  "frames": 5304,
+  "duration": 176.98,
+  "bytes": 16310696,
+  "poster": "static/videos/attachment_poster.jpg"
+ },
  "videos/cl_clip_gpt.mp4": {
   "width": 640,
   "height": 470,
@@ -149,28 +158,37 @@
  "videos/skill_insert_flexible.mp4": {
   "width": 512,
   "height": 512,
-  "fps": 10.0,
-  "frames": 112,
-  "duration": 11.2,
-  "bytes": 443722,
+  "fps": 60.0,
+  "frames": 1005,
+  "duration": 16.75,
+  "bytes": 1278533,
   "poster": "static/videos/skill_insert_flexible_poster.jpg"
  },
  "videos/skill_insert_lift.mp4": {
   "width": 512,
   "height": 512,
-  "fps": 10.0,
-  "frames": 221,
-  "duration": 22.1,
-  "bytes": 932900,
+  "fps": 60.0,
+  "frames": 542,
+  "duration": 9.03,
+  "bytes": 696429,
   "poster": "static/videos/skill_insert_lift_poster.jpg"
+ },
+ "videos/skill_insert_slide.mp4": {
+  "width": 512,
+  "height": 512,
+  "fps": 60.0,
+  "frames": 497,
+  "duration": 8.28,
+  "bytes": 645601,
+  "poster": "static/videos/skill_insert_slide_poster.jpg"
  },
  "videos/skill_insert_stiff.mp4": {
   "width": 512,
   "height": 512,
-  "fps": 10.0,
-  "frames": 200,
-  "duration": 20.0,
-  "bytes": 821034,
+  "fps": 60.0,
+  "frames": 538,
+  "duration": 8.97,
+  "bytes": 690252,
   "poster": "static/videos/skill_insert_stiff_poster.jpg"
  },
  "videos/skill_pull.mp4": {
@@ -185,19 +203,19 @@
  "videos/wrong_slide_on_bottomed.mp4": {
   "width": 512,
   "height": 512,
-  "fps": 10.0,
-  "frames": 254,
-  "duration": 25.4,
-  "bytes": 1059630,
+  "fps": 60.0,
+  "frames": 1476,
+  "duration": 24.6,
+  "bytes": 1566317,
   "poster": "static/videos/wrong_slide_on_bottomed_poster.jpg"
  },
  "videos/wrong_stiff_on_flexible.mp4": {
   "width": 512,
   "height": 512,
-  "fps": 10.0,
-  "frames": 160,
-  "duration": 16.0,
-  "bytes": 645552,
+  "fps": 60.0,
+  "frames": 1661,
+  "duration": 27.68,
+  "bytes": 2047422,
   "poster": "static/videos/wrong_stiff_on_flexible_poster.jpg"
  }
 }

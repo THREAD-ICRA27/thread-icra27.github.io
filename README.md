@@ -14,7 +14,7 @@ external scripts, no analytics. Layout adapted from the Academic Project Page Te
 
 | Anchor | Content |
 |---|---|
-| `#video` | video attachment (**placeholder** until the ICRA video is ready) |
+| `#video` | video attachment (the ICRA 2027 overview video, `static/videos/attachment.mp4`) |
 | `#abstract` | abstract and Fig. 1 |
 | `#overview` | pipeline (Fig. 2) |
 | `#skills` | skill library clips, DLO/clip types (Fig. 3), wrong-skill clips, skill transfer table |

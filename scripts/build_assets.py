@@ -30,10 +30,14 @@ ONLY_NAMES = set()
 
 # name: (source, trim_start_s, trim_end_s or None, output width or None, crf, poster_time_s, crop_bottom_rows)
 VIDEOS = {
-    # skill library -- the RL insertion clips are 256x256 at 10 fps; upscale x2 (lanczos) so
-    # browsers do not blur them further
+    # video attachment (the overview video): remuxed, not re-encoded -- crf None = stream copy,
+    # audio kept, metadata stripped, +faststart
+    "attachment":            (SRC["attachment"], 0, None, None, None, 0.5, 0),   # poster = title slide
+    # skill library -- the RL insertion clips are 256x256 (60 fps since the 2026-09-30 re-render);
+    # upscale x2 (lanczos) so browsers do not blur them further
     "skill_insert_flexible": (SRC["skill_insert_flexible"], 0, None, 512, 20, 3.0, 0),
     "skill_insert_stiff":    (SRC["skill_insert_stiff"], 0, None, 512, 20, 3.0, 0),
+    "skill_insert_slide":    (SRC["skill_insert_slide"], 0, None, 512, 20, 3.0, 0),
     "skill_insert_lift":     (SRC["skill_insert_lift"], 0, None, 512, 20, 3.0, 0),
     # Pull and Flatten, cut from the THREAD closed-loop episode so the decision box names the skill
     # for the whole clip (decision 3: pull, decision 7: flatten).
@@ -42,7 +46,7 @@ VIDEOS = {
     "skill_flatten":         (SRC["skill_flatten"], 12.12, 16.76, None, 20, 1.5, 10),
     # applying the wrong skill
     "wrong_slide_on_bottomed": (SRC["wrong_slide_on_bottomed"], 0, None, 512, 20, 6.0, 0),
-    "wrong_stiff_on_flexible": (SRC["wrong_stiff_on_flexible"], 0, 16.0, 512, 20, 8.0, 0),   # first attempts
+    "wrong_stiff_on_flexible": (SRC["wrong_stiff_on_flexible"], 0, None, 512, 20, 8.0, 0),
     # closed loop; the lower-left box shows every planner decision
     "cl_rope_ours":  (SRC["cl_rope_ours"], 0, None, None, 21, 2.0, 10),
     "cl_rope_gpt":   (SRC["cl_rope_gpt"], 0, None, None, 21, 2.0, 10),
@@ -123,8 +127,12 @@ def build_videos(manifest):
             cmd += ["-ss", str(t0)]
         if t1:
             cmd += ["-to", str(t1)]
-        cmd += ["-vf", vf, "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", str(crf),
-                "-movflags", "+faststart", "-an", "-map_metadata", "-1", "-fflags", "+bitexact", out]
+        if crf is None:       # already a web encode: copy the streams (keeps audio), strip metadata, faststart
+            cmd += ["-map", "0:v:0", "-map", "0:a?", "-c", "copy", "-map_metadata", "-1", "-map_metadata:s", "-1",
+                    "-map_chapters", "-1", "-movflags", "+faststart", "-fflags", "+bitexact", out]
+        else:
+            cmd += ["-vf", vf, "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", str(crf),
+                    "-movflags", "+faststart", "-an", "-map_metadata", "-1", "-fflags", "+bitexact", out]
         run(cmd)
         w, h, fps, dur = probe(out)
         frames = count_frames(out)
